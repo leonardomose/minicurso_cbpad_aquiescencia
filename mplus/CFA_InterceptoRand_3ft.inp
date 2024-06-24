@@ -1,0 +1,34 @@
+TITLE: AFC com três fatores e modelo de interceptos randômicos
+DATA:	FILE IS 'data_acq_balanced.txt'; ! Banco de dados
+
+VARIABLE:
+NAMES ARE ! Aqui inserimos todas as variáveis que o banco possui
+y1-y12
+acq_index;
+
+USEVARIABLES ARE
+y1-y12; ! Aqui definimos apenas as variáveis que utilizaremos na análise
+
+CATEGORICAL ARE ALL; ! Declaramos que todas variáveis são categóricas
+
+ANALYSIS:
+ESTIMATOR = WLSMV;
+
+MODEL:
+FRAND BY y1-y12@1; ! Fixamos todas as cargas do fator de intercepto em 1
+FRAND*; ! Liberamos a variância do fator de intercepto para ser estimada
+
+! Estimamos três fatores de conteúdo
+F1 BY y1*1 y2*-1 y3*1 y4*-1;  ! Os "priors" (exemplo: y1*1) na frente das variáveis são pontos de partida       
+F2 BY y5*1 y6*-1 y7*1 y8*-1;        
+F3 BY y9*1 y10*-1 y11*1 y12*-1;
+! No item y1, definimos que a carga deve começar a ser estimada a partir do valor 1 (y1*1)
+! No item y2, definimos que a carga deve começar a ser estimada a partir do valor -1  (y2*-1)
+! Priors podem ajudar o modelo a convergir com mais facilidade
+  
+F1-F3@1; ! Como liberamos as cargas para serem estimadas, fixamos a variância dos fatores em 1
+
+FRAND WITH F1-F3@0; ! Fator de interceptos randômicos e os fatores de conteúdo não correlacionados
+
+OUTPUT: STDYX; 
+
