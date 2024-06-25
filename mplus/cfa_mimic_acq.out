@@ -1,0 +1,537 @@
+Mplus VERSION 7.11
+MUTHEN & MUTHEN
+01/16/2023   6:33 PM
+
+INPUT INSTRUCTIONS
+
+  TITLE: Modelo MIMIC para controle de aquiescência
+  DATA:	FILE IS 'data_acq_Mplus.txt'; ! Banco de dados
+
+  VARIABLE: ! Aqui inserimos todas as variáveis que o banco possui
+  NAMES ARE
+  y1-y12		
+  acq_index;
+
+  USEVARIABLES ARE ! Aqui definimos apenas as variáveis que utilizaremos na análise
+  y1-y12		
+  acq_index;
+
+  CATEGORICAL ARE y1-y12; ! Declaramos que as variáveis de y1 a y12 são categóricas
+  !PS: o índice de aquiescência não é categórico
+
+  ANALYSIS:
+  ESTIMATOR = WLSMV;
+
+  MODEL:
+  ! Configuramos um modelo confirmatório com três fatores de conteúdo
+  F1 by y1-y4;
+  F2 by y5-y8;
+  F3 by y9-y12;
+
+  ! Regredimos o índice de aquiescência nos escores dos itens
+  y1-y12 ON acq_index;
+
+  ! Correlação entre os fatores de conteúdo e o índice de aquiescência é fixa em 0
+  F1-F3 with acq_index@0;
+
+  OUTPUT: STDYX; MODINDICES;
+
+
+
+
+*** WARNING in VARIABLE command
+  Note that only the first 8 characters of variable names are used in the output.
+  Shorten variable names to avoid any confusion.
+   1 WARNING(S) FOUND IN THE INPUT INSTRUCTIONS
+
+
+
+Modelo MIMIC para controle de aquiescência
+
+SUMMARY OF ANALYSIS
+
+Number of groups                                                 1
+Number of observations                                        2000
+
+Number of dependent variables                                   12
+Number of independent variables                                  1
+Number of continuous latent variables                            3
+
+Observed dependent variables
+
+  Binary and ordered categorical (ordinal)
+   Y1          Y2          Y3          Y4          Y5          Y6
+   Y7          Y8          Y9          Y10         Y11         Y12
+
+Observed independent variables
+   ACQ_INDE
+
+Continuous latent variables
+   F1          F2          F3
+
+
+Estimator                                                    WLSMV
+Maximum number of iterations                                  1000
+Convergence criterion                                    0.500D-04
+Maximum number of steepest descent iterations                   20
+Parameterization                                             DELTA
+
+Input data file(s)
+  data_acq_Mplus.txt
+
+Input data format  FREE
+
+
+UNIVARIATE PROPORTIONS AND COUNTS FOR CATEGORICAL VARIABLES
+
+    Y1
+      Category 1    0.071      141.000
+      Category 2    0.222      445.000
+      Category 3    0.403      807.000
+      Category 4    0.235      470.000
+      Category 5    0.068      137.000
+    Y2
+      Category 1    0.056      111.000
+      Category 2    0.250      499.000
+      Category 3    0.403      805.000
+      Category 4    0.224      448.000
+      Category 5    0.068      137.000
+    Y3
+      Category 1    0.073      146.000
+      Category 2    0.243      487.000
+      Category 3    0.387      773.000
+      Category 4    0.238      477.000
+      Category 5    0.058      117.000
+    Y4
+      Category 1    0.062      123.000
+      Category 2    0.241      481.000
+      Category 3    0.394      789.000
+      Category 4    0.237      474.000
+      Category 5    0.067      133.000
+    Y5
+      Category 1    0.064      129.000
+      Category 2    0.249      498.000
+      Category 3    0.394      788.000
+      Category 4    0.225      450.000
+      Category 5    0.068      135.000
+    Y6
+      Category 1    0.069      139.000
+      Category 2    0.246      492.000
+      Category 3    0.379      757.000
+      Category 4    0.241      482.000
+      Category 5    0.065      130.000
+    Y7
+      Category 1    0.064      129.000
+      Category 2    0.233      465.000
+      Category 3    0.388      776.000
+      Category 4    0.249      497.000
+      Category 5    0.067      133.000
+    Y8
+      Category 1    0.072      145.000
+      Category 2    0.237      474.000
+      Category 3    0.386      772.000
+      Category 4    0.236      472.000
+      Category 5    0.068      137.000
+    Y9
+      Category 1    0.075      151.000
+      Category 2    0.229      459.000
+      Category 3    0.384      767.000
+      Category 4    0.240      479.000
+      Category 5    0.072      144.000
+    Y10
+      Category 1    0.072      143.000
+      Category 2    0.234      468.000
+      Category 3    0.391      781.000
+      Category 4    0.236      472.000
+      Category 5    0.068      136.000
+    Y11
+      Category 1    0.059      118.000
+      Category 2    0.253      506.000
+      Category 3    0.380      761.000
+      Category 4    0.244      488.000
+      Category 5    0.064      127.000
+    Y12
+      Category 1    0.067      133.000
+      Category 2    0.240      479.000
+      Category 3    0.386      772.000
+      Category 4    0.243      485.000
+      Category 5    0.065      131.000
+
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+
+
+MODEL FIT INFORMATION
+
+Number of Free Parameters                       77
+
+Chi-Square Test of Model Fit
+
+          Value                            111.681*
+          Degrees of Freedom                    51
+          P-Value                           0.0000
+
+*   The chi-square value for MLM, MLMV, MLR, ULSMV, WLSM and WLSMV cannot be used
+    for chi-square difference testing in the regular way.  MLM, MLR and WLSM
+    chi-square difference testing is described on the Mplus website.  MLMV, WLSMV,
+    and ULSMV difference testing is done using the DIFFTEST option.
+
+RMSEA (Root Mean Square Error Of Approximation)
+
+          Estimate                           0.024
+          90 Percent C.I.                    0.018  0.031
+          Probability RMSEA <= .05           1.000
+
+CFI/TLI
+
+          CFI                                0.993
+          TLI                                0.989
+
+Chi-Square Test of Model Fit for the Baseline Model
+
+          Value                           8438.889
+          Degrees of Freedom                    78
+          P-Value                           0.0000
+
+WRMR (Weighted Root Mean Square Residual)
+
+          Value                              0.621
+
+
+
+MODEL RESULTS
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+ F1       BY
+    Y1                 1.000      0.000    999.000    999.000
+    Y2                -1.035      0.049    -21.063      0.000
+    Y3                 0.997      0.053     18.792      0.000
+    Y4                -1.008      0.048    -21.018      0.000
+
+ F2       BY
+    Y5                 1.000      0.000    999.000    999.000
+    Y6                -1.006      0.051    -19.593      0.000
+    Y7                 0.978      0.056     17.420      0.000
+    Y8                -1.017      0.052    -19.733      0.000
+
+ F3       BY
+    Y9                 1.000      0.000    999.000    999.000
+    Y10               -0.996      0.046    -21.672      0.000
+    Y11                0.913      0.048     18.997      0.000
+    Y12               -0.926      0.045    -20.645      0.000
+
+ Y1       ON
+    ACQ_INDEX          0.842      0.043     19.684      0.000
+
+ Y2       ON
+    ACQ_INDEX          0.892      0.041     21.567      0.000
+
+ Y3       ON
+    ACQ_INDEX          0.915      0.041     22.323      0.000
+
+ Y4       ON
+    ACQ_INDEX          0.889      0.041     21.611      0.000
+
+ Y5       ON
+    ACQ_INDEX          0.850      0.042     20.194      0.000
+
+ Y6       ON
+    ACQ_INDEX          0.930      0.041     22.709      0.000
+
+ Y7       ON
+    ACQ_INDEX          0.914      0.041     22.398      0.000
+
+ Y8       ON
+    ACQ_INDEX          0.929      0.041     22.517      0.000
+
+ Y9       ON
+    ACQ_INDEX          0.828      0.042     19.538      0.000
+
+ Y10      ON
+    ACQ_INDEX          0.868      0.042     20.537      0.000
+
+ Y11      ON
+    ACQ_INDEX          0.856      0.042     20.154      0.000
+
+ Y12      ON
+    ACQ_INDEX          0.838      0.042     19.890      0.000
+
+ F1       WITH
+    ACQ_INDEX          0.000      0.000    999.000    999.000
+
+ F2       WITH
+    ACQ_INDEX          0.000      0.000    999.000    999.000
+    F1                 0.137      0.012     11.442      0.000
+
+ F3       WITH
+    ACQ_INDEX          0.000      0.000    999.000    999.000
+    F1                 0.138      0.013     10.761      0.000
+    F2                 0.153      0.013     11.709      0.000
+
+ Means
+    ACQ_INDEX          2.997      0.010    303.612      0.000
+
+ Thresholds
+    Y1$1               1.051      0.140      7.527      0.000
+    Y1$2               1.979      0.133     14.902      0.000
+    Y1$3               3.038      0.130     23.456      0.000
+    Y1$4               4.010      0.130     30.768      0.000
+    Y2$1               1.078      0.137      7.844      0.000
+    Y2$2               2.162      0.129     16.801      0.000
+    Y2$3               3.218      0.125     25.701      0.000
+    Y2$4               4.159      0.126     33.015      0.000
+    Y3$1               1.288      0.134      9.640      0.000
+    Y3$2               2.265      0.127     17.802      0.000
+    Y3$3               3.275      0.124     26.443      0.000
+    Y3$4               4.310      0.125     34.417      0.000
+    Y4$1               1.122      0.136      8.222      0.000
+    Y4$2               2.146      0.128     16.708      0.000
+    Y4$3               3.179      0.125     25.497      0.000
+    Y4$4               4.167      0.126     33.192      0.000
+    Y5$1               1.029      0.138      7.464      0.000
+    Y5$2               2.061      0.131     15.796      0.000
+    Y5$3               3.093      0.127     24.382      0.000
+    Y5$4               4.042      0.127     31.736      0.000
+    Y6$1               1.308      0.135      9.709      0.000
+    Y6$2               2.307      0.128     18.041      0.000
+    Y6$3               3.295      0.124     26.520      0.000
+    Y6$4               4.301      0.125     34.510      0.000
+    Y7$1               1.222      0.134      9.148      0.000
+    Y7$2               2.207      0.127     17.410      0.000
+    Y7$3               3.222      0.123     26.150      0.000
+    Y7$4               4.243      0.124     34.219      0.000
+    Y8$1               1.328      0.134      9.878      0.000
+    Y8$2               2.288      0.128     17.840      0.000
+    Y8$3               3.297      0.125     26.353      0.000
+    Y8$4               4.272      0.126     34.009      0.000
+    Y9$1               1.045      0.138      7.555      0.000
+    Y9$2               1.971      0.132     14.971      0.000
+    Y9$3               2.972      0.128     23.213      0.000
+    Y9$4               3.942      0.128     30.734      0.000
+    Y10$1              1.135      0.138      8.224      0.000
+    Y10$2              2.091      0.132     15.898      0.000
+    Y10$3              3.113      0.128     24.295      0.000
+    Y10$4              4.091      0.129     31.814      0.000
+    Y11$1              1.002      0.140      7.139      0.000
+    Y11$2              2.075      0.132     15.722      0.000
+    Y11$3              3.068      0.129     23.860      0.000
+    Y11$4              4.091      0.129     31.770      0.000
+    Y12$1              1.008      0.137      7.340      0.000
+    Y12$2              2.003      0.130     15.386      0.000
+    Y12$3              3.012      0.127     23.703      0.000
+    Y12$4              4.021      0.127     31.567      0.000
+
+ Variances
+    ACQ_INDEX          0.219      0.006     33.661      0.000
+    F1                 0.351      0.025     14.304      0.000
+    F2                 0.340      0.025     13.391      0.000
+    F3                 0.400      0.026     15.692      0.000
+
+
+STANDARDIZED MODEL RESULTS
+
+
+STDYX Standardization
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+ F1       BY
+    Y1                 0.593      0.021     28.609      0.000
+    Y2                -0.613      0.020    -30.479      0.000
+    Y3                 0.591      0.021     28.001      0.000
+    Y4                -0.597      0.020    -30.230      0.000
+
+ F2       BY
+    Y5                 0.583      0.022     26.782      0.000
+    Y6                -0.586      0.021    -27.619      0.000
+    Y7                 0.570      0.022     25.851      0.000
+    Y8                -0.592      0.021    -28.106      0.000
+
+ F3       BY
+    Y9                 0.633      0.020     31.384      0.000
+    Y10               -0.630      0.021    -30.155      0.000
+    Y11                0.577      0.021     27.103      0.000
+    Y12               -0.586      0.021    -28.201      0.000
+
+ Y1       ON
+    ACQ_INDEX          0.394      0.021     18.616      0.000
+
+ Y2       ON
+    ACQ_INDEX          0.417      0.020     20.346      0.000
+
+ Y3       ON
+    ACQ_INDEX          0.428      0.020     20.982      0.000
+
+ Y4       ON
+    ACQ_INDEX          0.416      0.020     20.473      0.000
+
+ Y5       ON
+    ACQ_INDEX          0.397      0.021     19.267      0.000
+
+ Y6       ON
+    ACQ_INDEX          0.435      0.020     21.571      0.000
+
+ Y7       ON
+    ACQ_INDEX          0.428      0.020     20.976      0.000
+
+ Y8       ON
+    ACQ_INDEX          0.435      0.020     21.313      0.000
+
+ Y9       ON
+    ACQ_INDEX          0.387      0.021     18.598      0.000
+
+ Y10      ON
+    ACQ_INDEX          0.406      0.021     19.578      0.000
+
+ Y11      ON
+    ACQ_INDEX          0.400      0.021     19.232      0.000
+
+ Y12      ON
+    ACQ_INDEX          0.392      0.021     18.673      0.000
+
+ F1       WITH
+    ACQ_INDEX          0.000      0.000    999.000    999.000
+
+ F2       WITH
+    ACQ_INDEX          0.000      0.000    999.000    999.000
+    F1                 0.397      0.028     14.434      0.000
+
+ F3       WITH
+    ACQ_INDEX          0.000      0.000    999.000    999.000
+    F1                 0.367      0.029     12.728      0.000
+    F2                 0.414      0.027     15.157      0.000
+
+ Means
+    ACQ_INDEX          6.409      0.097     65.830      0.000
+
+ Thresholds
+    Y1$1               1.051      0.140      7.527      0.000
+    Y1$2               1.979      0.133     14.902      0.000
+    Y1$3               3.038      0.130     23.456      0.000
+    Y1$4               4.010      0.130     30.768      0.000
+    Y2$1               1.078      0.137      7.844      0.000
+    Y2$2               2.162      0.129     16.801      0.000
+    Y2$3               3.218      0.125     25.701      0.000
+    Y2$4               4.159      0.126     33.015      0.000
+    Y3$1               1.288      0.134      9.640      0.000
+    Y3$2               2.265      0.127     17.802      0.000
+    Y3$3               3.275      0.124     26.443      0.000
+    Y3$4               4.310      0.125     34.417      0.000
+    Y4$1               1.122      0.136      8.222      0.000
+    Y4$2               2.146      0.128     16.708      0.000
+    Y4$3               3.179      0.125     25.497      0.000
+    Y4$4               4.167      0.126     33.192      0.000
+    Y5$1               1.029      0.138      7.464      0.000
+    Y5$2               2.061      0.131     15.796      0.000
+    Y5$3               3.093      0.127     24.382      0.000
+    Y5$4               4.042      0.127     31.736      0.000
+    Y6$1               1.308      0.135      9.709      0.000
+    Y6$2               2.307      0.128     18.041      0.000
+    Y6$3               3.295      0.124     26.520      0.000
+    Y6$4               4.301      0.125     34.510      0.000
+    Y7$1               1.222      0.134      9.148      0.000
+    Y7$2               2.207      0.127     17.410      0.000
+    Y7$3               3.222      0.123     26.150      0.000
+    Y7$4               4.243      0.124     34.219      0.000
+    Y8$1               1.328      0.134      9.878      0.000
+    Y8$2               2.288      0.128     17.840      0.000
+    Y8$3               3.297      0.125     26.353      0.000
+    Y8$4               4.272      0.126     34.009      0.000
+    Y9$1               1.045      0.138      7.555      0.000
+    Y9$2               1.971      0.132     14.971      0.000
+    Y9$3               2.972      0.128     23.213      0.000
+    Y9$4               3.942      0.128     30.734      0.000
+    Y10$1              1.135      0.138      8.224      0.000
+    Y10$2              2.091      0.132     15.898      0.000
+    Y10$3              3.113      0.128     24.295      0.000
+    Y10$4              4.091      0.129     31.814      0.000
+    Y11$1              1.002      0.140      7.139      0.000
+    Y11$2              2.075      0.132     15.722      0.000
+    Y11$3              3.068      0.129     23.860      0.000
+    Y11$4              4.091      0.129     31.770      0.000
+    Y12$1              1.008      0.137      7.340      0.000
+    Y12$2              2.003      0.130     15.386      0.000
+    Y12$3              3.012      0.127     23.703      0.000
+    Y12$4              4.021      0.127     31.567      0.000
+
+ Variances
+    ACQ_INDEX          1.000      0.000    999.000    999.000
+    F1                 1.000      0.000    999.000    999.000
+    F2                 1.000      0.000    999.000    999.000
+    F3                 1.000      0.000    999.000    999.000
+
+
+R-SQUARE
+
+    Observed                                        Two-Tailed   Residual
+    Variable        Estimate       S.E.  Est./S.E.    P-Value    Variance
+
+    Y1                 0.506      0.026     19.606      0.000      0.494
+    Y2                 0.550      0.027     20.289      0.000      0.450
+    Y3                 0.532      0.026     20.163      0.000      0.468
+    Y4                 0.529      0.025     20.890      0.000      0.471
+    Y5                 0.497      0.027     18.517      0.000      0.503
+    Y6                 0.533      0.026     20.179      0.000      0.467
+    Y7                 0.508      0.027     19.098      0.000      0.492
+    Y8                 0.540      0.026     20.413      0.000      0.460
+    Y9                 0.550      0.026     21.013      0.000      0.450
+    Y10                0.562      0.028     20.330      0.000      0.438
+    Y11                0.494      0.027     18.568      0.000      0.506
+    Y12                0.496      0.026     19.240      0.000      0.504
+
+
+QUALITY OF NUMERICAL RESULTS
+
+     Condition Number for the Information Matrix              0.893E-04
+       (ratio of smallest to largest eigenvalue)
+
+
+MODEL MODIFICATION INDICES
+
+NOTE:  Modification indices for direct effects of observed dependent variables
+regressed on covariates and residual covariances among observed dependent
+variables may not be included.  To include these, request MODINDICES (ALL).
+
+Minimum M.I. value for printing the modification index    10.000
+
+                                   M.I.     E.P.C.  Std E.P.C.  StdYX E.P.C.
+
+ON Statements
+
+Y9       ON Y8                    10.538    -0.049     -0.049       -0.049
+ACQ_INDE ON Y4                   999.000     0.000      0.000        0.000
+ACQ_INDE ON Y6                   999.000     0.000      0.000        0.000
+ACQ_INDE ON Y8                   999.000     0.000      0.000        0.000
+ACQ_INDE ON Y10                  999.000     0.000      0.000        0.000
+ACQ_INDE ON Y12                  999.000     0.000      0.000        0.000
+
+
+DIAGRAM INFORMATION
+
+  Use View Diagram under the Diagram menu in the Mplus Editor to view the diagram.
+  If running Mplus from the Mplus Diagrammer, the diagram opens automatically.
+
+  Diagram output
+    c:\users\leona\onedrive\curso_vies_academy\aula 2 - aquiescência\mplus\cfa_mimic_acq.dgm
+
+     Beginning Time:  18:33:40
+        Ending Time:  18:33:41
+       Elapsed Time:  00:00:01
+
+
+
+MUTHEN & MUTHEN
+3463 Stoner Ave.
+Los Angeles, CA  90066
+
+Tel: (310) 391-9971
+Fax: (310) 391-8971
+Web: www.StatModel.com
+Support: Support@StatModel.com
+
+Copyright (c) 1998-2013 Muthen & Muthen

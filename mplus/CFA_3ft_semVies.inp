@@ -1,0 +1,24 @@
+TITLE: AFC com três fatores sem controle de aquiescência
+DATA:	FILE IS 'data_acq_balanced.txt'; ! Banco de dados
+
+VARIABLE:
+NAMES ARE ! Aqui inserimos todas as variáveis que o banco possui
+y1-y12
+acq_index;
+
+USEVARIABLES ARE
+y1-y12; ! Aqui definimos apenas as variáveis que utilizaremos na análise
+
+CATEGORICAL ARE ALL; ! Declaramos que todas variáveis são categóricas
+
+ANALYSIS:
+ESTIMATOR = WLSMV; 
+
+MODEL:
+! Configuramos um modelo confirmatório com três fatores
+F1 BY y1-y4; 
+F2 BY y5-y8;
+F3 BY y9-y12;
+
+OUTPUT: STDYX; 
+
