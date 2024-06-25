@@ -1,0 +1,183 @@
+---
+title: "Recentralização"
+author: "Leonardo Mose"
+date: "2024-06-25"
+output: html_document
+---
+
+# Nesse script, vamos controlar a aquiescência por meio da **recentralização**
+
+
+# Carregar pacotes
+```{r}
+# install.packages("readxl")
+# install.packages("dplyr")
+# install.packages("psych")
+# install.packages("lavaan")
+# install.packages("EGAnet")
+library(readxl)
+library(dplyr)
+library(psych)
+library(lavaan)
+library(EGAnet)
+```
+
+
+## Carregando dados
+```{r}
+data_acq_unbal <- read.csv(
+  file = "../dados/data_acq_unbalanced.csv",
+  header = TRUE, sep = ",")
+item_dic_unbal <- read_excel(
+  path = "../dicionarios/dic_unbalanced.xlsx", 1)
+```
+
+
+
+## Primeiramente, vamos verificar quantos fatores são sugeridos para extração por meio da análise paralela e por meio de Exploratory Graph Analysis (EGA)
+```{r}
+## Análise paralela
+fa.parallel(data_acq_unbal, cor = "poly", fa = "pc")
+
+## Exploratory Graph Analysis
+EGAnet::EGA(data_acq_unbal)
+```
+
+
+### Vamos verificar agora o que acontece quando realizamos uma análise fatorial exploratória, extraindo 3 fatores
+### Veremos que as cargas fatoriais estão bagunçadas (não foi recuperado o modelo verdadeiro)
+```{r}
+model_EFA_3ft <-
+'efa("efa1")*f1 + 
+ efa("efa1")*f2 +
+ efa("efa1")*f3 =~ y1 + y2 + y3 + y4 + y5 + y6 + y7 + y8 + y9 + y10 + y11 + y12'
+
+
+# No lavaan
+fit_EFA_3ft <- sem(model = model_EFA_3ft, data = data_acq_unbal, 
+                   ordered = TRUE, estimator = "DWLS")
+summary(fit_EFA_3ft, fit.measures = T, standardized = T)
+
+
+# No psych
+EFA_3ft_psych <- fa(data_acq_unbal, nfactors = 3,
+                    rotate = "oblimin", cor = "poly")
+print(EFA_3ft_psych, cut = .3)
+```
+
+
+## Vamos também realizar uma análise de congruência, a fim de verificar se os itens carregaram nos fatores conforme o esperado:
+```{r}
+# Extraindo as cargas fatoriais do modelo do Lavaan
+loadings_EFA3ft <- inspect(fit_EFA_3ft, what = "std")[["lambda"]]
+
+# Criando uma matriz com as cargas esperadas para cada fator
+co <-  data.frame(
+  Abertura = c(1,-1,1,1,rep(0, 8)),
+  Conscienciosidade = c(rep(0, 4), 1,-1,1,-1, rep(0, 4)),
+  Extrovesão = c(rep(0, 8),1,-1,1,1)
+  )
+
+# Realizando a análise de congruência para as cargas do modelo fatorial do lavaan 
+psych::congruence(loadings_EFA3ft, co)
+```
+
+
+# **Recentralização** (ipsatização)
+## Vamos recentralizar os dados, subtraindo dos escores dos itens a média de cada sujeito (i.e., índice de aquiescência)
+```{r}
+recenter_acq <- function(data, dic) {
+  # Seleciona somente colunas que não sejam NA em seman_pairs
+  cols <- dic$coditem[!is.na(dic$seman_pairs)]
+  
+  # Calcular média de aquiescência de cada linha para colunas selecionadas
+  data$mean_acq <- rowMeans(data[, cols, drop = FALSE], na.rm = TRUE)
+  
+  # Iterar sobre todas as variáveis listadas em 'coditem' e subtrair a média de aquiescência
+  for (i in dic$coditem) {
+    data[[i]] <- data[[i]] - data$mean_acq
+  }
+  
+  return(data)
+}
+
+data_recentered <- recenter_acq(data_acq_unbal, item_dic_unbal)
+```
+
+
+# Selecionar por meio de *item_dic_unbal* as variáveis do banco que serão utilizadas nas análises
+# Em seguida, converter novamente os itens em categorias ordinais
+```{r}
+select_var <- item_dic_unbal$coditem
+
+data_recentered[, select_var] <- apply(
+  data_recentered[, select_var], 2, function (x) cut(
+    x, breaks = 5, labels = FALSE)
+  )
+```
+
+
+## Novamente, vamos verificar quantos fatores são sugeridos para extração. Usaremos os dados recentralizados
+```{r}
+## Análise paralela
+fa.parallel(data_recentered[,select_var], fa = "pc")
+
+## Exploratory Graph Analysis
+EGAnet::EGA(data_recentered[,select_var])
+```
+
+
+### Vamos realizar a análise fatorial exploratória com os dados recentralizados
+```{r}
+model_EFA_3ft <-
+'efa("efa1")*f1 + 
+ efa("efa1")*f2 +
+ efa("efa1")*f3 =~ y1 + y2 + y3 + y4 + y5 + y6 + y7 + y8 + y9 + y10 + y11 + y12'
+
+
+# No lavaan
+fit_EFA_3ft_recenter <- sem(model = model_EFA_3ft, data = data_recentered[,select_var],
+                            ordered = TRUE, estimator = "DWLS")
+summary(fit_EFA_3ft_recenter, fit.measures = T, standardized = T)
+
+
+# No psych
+EFA_3ft_psych_recenter <- fa(data_recentered[,select_var], cor = "poly",
+                             nfactors = 3, rotate = "oblimin")
+print(EFA_3ft_psych_recenter, cut = .3)
+```
+
+
+## Agora, vamos realizar uma análise de congruência para as cargas do modelo fatorial exploratório com os dados recentralizados
+```{r}
+# Extraindo as cargas fatoriais do modelo do Lavaan
+loadings_EFA3ft_recenter <- inspect(fit_EFA_3ft_recenter,
+                                    what = "std")[["lambda"]]
+
+# Criando uma matriz com as cargas esperadas para cada fator
+co <-  data.frame(
+  Abertura = c(1,-1,1,1,rep(0, 8)),
+  Conscienciosidade = c(rep(0, 4), 1,-1,1,-1, rep(0, 4)),
+  Extrovesão = c(rep(0, 8),1,-1,1,1)
+  )
+
+# Realizando a análise de congruência para as cargas do modelo fatorial do lavaan 
+psych::congruence(loadings_EFA3ft_recenter, co)
+```
+
+
+
+## Análise fatorial confirmatória com os dados recentralizados
+```{r}
+model_3ft_recenter <- 
+  'Trait1 =~ y1 + y2 + y3 + y4 
+   Trait2 =~ y5 + y6 + y7 + y8
+   Trait3 =~ y9 + y10 + y11 + y12'
+
+fit_CFA_3ft_recenter <- cfa(model = model_3ft_recenter, 
+                            data = data_recentered,
+                            ordered = TRUE, estimator = "DWLS")
+summary(fit_CFA_3ft_recenter, fit.measures = T, standardized = T)
+```
+
+
